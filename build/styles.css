@@ -1,0 +1,28 @@
+.graphwidget__main___eseKD{
+    display: flex;
+    flex-flow: row wrap;
+    height: 100%;
+    align-content: stretch;
+}
+.graphwidget__dayCol___2-o3N {
+    border-left: 1px solid #888;
+    padding: 5px;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    border-right: none;
+}
+
+
+.graphwidget__yAxis___1zfwD{
+    width: 100px;
+}
+
+.graphwidget__colWrapper___2a_Mn{
+    display: flex;
+    flex: 1;
+}.graphitem__container___2tR5B{
+    background-color: cornflowerblue;
+    height: 100%;
+}
+/*# sourceMappingURL=styles.css.map*/
