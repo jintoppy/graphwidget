@@ -12,7 +12,9 @@
     position: relative;
     border-right: none;
 }
-
+.graphwidget__dayCol___2-o3N:nth-child(even){
+    background-color: #f5f5f5;
+}
 
 .graphwidget__yAxis___1zfwD{
     width: 100px;

@@ -12,7 +12,9 @@
     position: relative;
     border-right: none;
 }
-
+.dayCol:nth-child(even){
+    background-color: #f5f5f5;
+}
 
 .yAxis{
     width: 100px;
