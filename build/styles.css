@@ -15,6 +15,9 @@
 .graphwidget__dayCol___2-o3N:nth-child(even){
     background-color: #f5f5f5;
 }
+.graphwidget__dayCol___2-o3N:last-child{
+    border-right: 1px solid #888;
+}
 
 .graphwidget__yAxis___1zfwD{
     width: 100px;
@@ -23,8 +26,38 @@
 .graphwidget__colWrapper___2a_Mn{
     display: flex;
     flex: 1;
-}.graphitem__container___2tR5B{
-    background-color: cornflowerblue;
+}.pricegraph__container___2kdZg{
+    position: absolute;
+    display: flex;
+    flex-flow: row wrap;
     height: 100%;
+    align-content: stretch;
+    width: 100%;
+}
+
+.pricegraph__col___13WB-{
+    padding: 0px;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    border-right: none;
+}
+.pricegraph__colWrapper___Npw_E{
+    display: flex;
+    flex: 1;
+}.pricegraphbar__main___374El{
+ text-align: left;
+ padding: 5px;
+ background-color: cornflowerblue;
+ height: 50px;
+ position:absolute;   
+}
+
+.pricegraphbar__line___3kN_d{
+    width: 1px;
+    background-color: red;
+    position: absolute;
+}.pricegraphlabel__main___3aw1V{
+    position: absolute;
 }
 /*# sourceMappingURL=styles.css.map*/

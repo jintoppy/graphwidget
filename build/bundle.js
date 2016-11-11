@@ -21468,6 +21468,7 @@
 	        _this.state = {
 	            noOfDays: 5,
 	            yAxisWidth: 100,
+	            priceGraphVal: [[1, 1, 21.99, 38], [2, 2, 17.99, 45], [3, 4, 14.99, 50], [5, 5, 24.99, 30]],
 	            events: [{
 	                start: 1,
 	                end: 3,
@@ -21484,10 +21485,7 @@
 	    _createClass(App, [{
 	        key: 'render',
 	        value: function render() {
-	            return _react2.default.createElement(_GraphWidget2.default, {
-	                events: this.state.events,
-	                yAxisWidth: this.state.yAxisWidth,
-	                noOfDays: this.state.noOfDays });
+	            return _react2.default.createElement(_GraphWidget2.default, this.state);
 	        }
 	    }]);
 	
@@ -21516,9 +21514,13 @@
 	
 	var _graphwidget2 = _interopRequireDefault(_graphwidget);
 	
-	var _GraphItem = __webpack_require__(176);
+	var _PriceGraph = __webpack_require__(176);
 	
-	var _GraphItem2 = _interopRequireDefault(_GraphItem);
+	var _PriceGraph2 = _interopRequireDefault(_PriceGraph);
+	
+	var _TierContainer = __webpack_require__(178);
+	
+	var _TierContainer2 = _interopRequireDefault(_TierContainer);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -21540,40 +21542,24 @@
 	    _createClass(GraphWidget, [{
 	        key: 'render',
 	        value: function render() {
-	            var _this2 = this;
-	
 	            var columns = [];
 	            var width = 100 / this.props.noOfDays;
 	
 	            var widthVal = width + '%';
-	
-	            var _loop = function _loop(i) {
-	                var isAnyEventStarting = _this2.props.events.find(function (event) {
-	                    return event.start === i + 1;
-	                });
-	                var eventItem = void 0;
-	                if (isAnyEventStarting) {
-	                    eventItem = _react2.default.createElement(_GraphItem2.default, { item: isAnyEventStarting });
-	                }
-	                columns.push(_react2.default.createElement('div', { key: i, style: { width: widthVal }, className: _graphwidget2.default.dayCol }));
-	            };
-	
 	            for (var i = 0; i < this.props.noOfDays; i++) {
-	                _loop(i);
+	                columns.push(_react2.default.createElement('div', { key: i, style: { width: widthVal }, className: _graphwidget2.default.dayCol }));
 	            }
 	            return _react2.default.createElement(
 	                'div',
 	                { className: _graphwidget2.default.main },
-	                _react2.default.createElement(
-	                    'div',
-	                    { style: { width: this.props.yAxisWidth }, className: _graphwidget2.default.yAxis },
-	                    'This is the yAxis'
-	                ),
+	                _react2.default.createElement('div', { style: { width: this.props.yAxisWidth }, className: _graphwidget2.default.yAxis }),
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: _graphwidget2.default.colWrapper },
 	                    columns
-	                )
+	                ),
+	                _react2.default.createElement(_PriceGraph2.default, this.props),
+	                _react2.default.createElement(_TierContainer2.default, this.props)
 	            );
 	        }
 	    }]);
@@ -21607,9 +21593,17 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _graphitem = __webpack_require__(177);
+	var _pricegraph = __webpack_require__(177);
 	
-	var _graphitem2 = _interopRequireDefault(_graphitem);
+	var _pricegraph2 = _interopRequireDefault(_pricegraph);
+	
+	var _PriceGraphBar = __webpack_require__(180);
+	
+	var _PriceGraphBar2 = _interopRequireDefault(_PriceGraphBar);
+	
+	var _PriceGraphLabel = __webpack_require__(182);
+	
+	var _PriceGraphLabel2 = _interopRequireDefault(_PriceGraphLabel);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -21619,37 +21613,351 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var GraphItem = function (_Component) {
-	    _inherits(GraphItem, _Component);
+	var PriceGraph = function (_Component) {
+	    _inherits(PriceGraph, _Component);
 	
-	    function GraphItem(props) {
-	        _classCallCheck(this, GraphItem);
+	    function PriceGraph(props) {
+	        _classCallCheck(this, PriceGraph);
 	
-	        return _possibleConstructorReturn(this, (GraphItem.__proto__ || Object.getPrototypeOf(GraphItem)).call(this, props));
+	        return _possibleConstructorReturn(this, (PriceGraph.__proto__ || Object.getPrototypeOf(PriceGraph)).call(this, props));
 	    }
 	
-	    _createClass(GraphItem, [{
+	    _createClass(PriceGraph, [{
 	        key: 'render',
 	        value: function render() {
+	            var _this2 = this;
+	
+	            var columns = [];
+	            var width = 100 / this.props.noOfDays;
+	
+	            var widthVal = width + '%';
+	            var sortedArr = this.props.priceGraphVal.map(function (item) {
+	                return item[2];
+	            }).sort(function (a, b) {
+	                return b - a;
+	            });
+	
+	            var yAxisLabels = [];
+	            var availableDatesList = this.props.priceGraphVal.map(function (x) {
+	                return x[0];
+	            });
+	            for (var i = 0; i < sortedArr.length; i++) {
+	                yAxisLabels.push(_react2.default.createElement(_PriceGraphLabel2.default, { key: i, yIndex: i, label: sortedArr[i] }));
+	            }
+	
+	            var _loop = function _loop(_i) {
+	                var previousItemFinder = function (index) {
+	                    if (index === 0) {
+	                        return index;
+	                    }
+	                    if (availableDatesList.indexOf(index) > -1) {
+	                        return index;
+	                    } else {
+	                        var gotResult = false;
+	                        var lastIndex = index;
+	                        while (!gotResult) {
+	                            if (availableDatesList.indexOf(lastIndex) > -1) {
+	                                gotResult = true;
+	                            } else {
+	                                lastIndex--;
+	                            }
+	                        }
+	                        return lastIndex;
+	                    }
+	                }(_i);
+	
+	                var previousItemIndex = _this2.props.priceGraphVal.findIndex(function (val) {
+	                    return val[0] === previousItemFinder;
+	                });
+	
+	                var nextItemIndex = _this2.props.priceGraphVal.findIndex(function (val) {
+	                    return val[0] === _i + 2;
+	                });
+	
+	                var priceBarIndex = _this2.props.priceGraphVal.findIndex(function (val) {
+	                    return val[0] === _i + 1;
+	                });
+	
+	                var barItem = void 0;
+	                if (priceBarIndex > -1) {
+	                    var isPriceBarFound = _this2.props.priceGraphVal[priceBarIndex];
+	                    var yIndex = sortedArr.indexOf(isPriceBarFound[2]);
+	                    var widthOfBar = 100 * (isPriceBarFound[1] - isPriceBarFound[0] + 1);
+	                    var rightLineDetails = void 0,
+	                        leftLineDetails = void 0;
+	                    //for Finding the next Item details
+	                    if (nextItemIndex > -1) {
+	                        var nextItem = _this2.props.priceGraphVal[nextItemIndex];
+	                        var nextItemYIndex = sortedArr.indexOf(nextItem[2]);
+	                        if (nextItemYIndex > yIndex) {
+	                            rightLineDetails = {
+	                                heightDimension: nextItemYIndex - yIndex
+	                            };
+	                        }
+	                    }
+	
+	                    //for Finding the previous item details
+	                    if (previousItemIndex > -1) {
+	                        var prevItem = _this2.props.priceGraphVal[previousItemIndex];
+	                        var prevItemYIndex = sortedArr.indexOf(prevItem[2]);
+	                        if (prevItemYIndex > yIndex) {
+	                            leftLineDetails = {
+	                                heightDimension: prevItemYIndex - yIndex
+	                            };
+	                        }
+	                    }
+	
+	                    barItem = _react2.default.createElement(_PriceGraphBar2.default, {
+	                        yIndex: yIndex,
+	                        indexOfItem: priceBarIndex,
+	                        currWidth: widthOfBar,
+	                        item: isPriceBarFound,
+	                        rightLineDetails: rightLineDetails,
+	                        leftLineDetails: leftLineDetails
+	                    });
+	                }
+	                columns.push(_react2.default.createElement(
+	                    'div',
+	                    { key: _i, style: { width: widthVal }, className: _pricegraph2.default.col },
+	                    barItem
+	                ));
+	            };
+	
+	            for (var _i = 0; _i < this.props.noOfDays; _i++) {
+	                _loop(_i);
+	            }
 	            return _react2.default.createElement(
 	                'div',
-	                { className: _graphitem2.default.container },
-	                this.props.item.detail
+	                { className: _pricegraph2.default.container },
+	                _react2.default.createElement(
+	                    'div',
+	                    { style: { width: this.props.yAxisWidth }, className: _pricegraph2.default.yAxis },
+	                    yAxisLabels
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: _pricegraph2.default.colWrapper },
+	                    columns
+	                )
 	            );
 	        }
 	    }]);
 	
-	    return GraphItem;
+	    return PriceGraph;
 	}(_react.Component);
 	
-	exports.default = GraphItem;
+	exports.default = PriceGraph;
 
 /***/ },
 /* 177 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"container":"graphitem__container___2tR5B"};
+	module.exports = {"container":"pricegraph__container___2kdZg","col":"pricegraph__col___13WB-","colWrapper":"pricegraph__colWrapper___Npw_E"};
+
+/***/ },
+/* 178 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _tiercontainer = __webpack_require__(179);
+	
+	var _tiercontainer2 = _interopRequireDefault(_tiercontainer);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var PriceGraph = function (_Component) {
+	    _inherits(PriceGraph, _Component);
+	
+	    function PriceGraph(props) {
+	        _classCallCheck(this, PriceGraph);
+	
+	        return _possibleConstructorReturn(this, (PriceGraph.__proto__ || Object.getPrototypeOf(PriceGraph)).call(this, props));
+	    }
+	
+	    _createClass(PriceGraph, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement('div', null);
+	        }
+	    }]);
+	
+	    return PriceGraph;
+	}(_react.Component);
+	
+	exports.default = PriceGraph;
+
+/***/ },
+/* 179 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _pricegraphbar = __webpack_require__(181);
+	
+	var _pricegraphbar2 = _interopRequireDefault(_pricegraphbar);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var PriceGraphBar = function (_Component) {
+	    _inherits(PriceGraphBar, _Component);
+	
+	    function PriceGraphBar(props) {
+	        _classCallCheck(this, PriceGraphBar);
+	
+	        return _possibleConstructorReturn(this, (PriceGraphBar.__proto__ || Object.getPrototypeOf(PriceGraphBar)).call(this, props));
+	    }
+	
+	    _createClass(PriceGraphBar, [{
+	        key: 'render',
+	        value: function render() {
+	            var widthVal = this.props.currWidth + '%';
+	            var topVal = this.props.yIndex * 100 + 'px';
+	
+	            var leftLine = void 0,
+	                rightLine = void 0;
+	            if (this.props.rightLineDetails) {
+	                var heightVal = this.props.rightLineDetails.heightDimension * 50;
+	                var style = {
+	                    height: heightVal,
+	                    top: '100%',
+	                    left: '100%'
+	                };
+	                rightLine = _react2.default.createElement('div', { style: style, className: _pricegraphbar2.default.line });
+	            }
+	
+	            if (this.props.leftLineDetails) {
+	                var _heightVal = this.props.leftLineDetails.heightDimension * 100 - 50;
+	                var _style = {
+	                    height: _heightVal,
+	                    top: '100%',
+	                    left: '-1px'
+	                };
+	                leftLine = _react2.default.createElement('div', { style: _style, className: _pricegraphbar2.default.line });
+	            }
+	
+	            return _react2.default.createElement(
+	                'div',
+	                { style: { width: widthVal, top: topVal }, className: _pricegraphbar2.default.main },
+	                this.props.item[2],
+	                leftLine,
+	                rightLine
+	            );
+	        }
+	    }]);
+	
+	    return PriceGraphBar;
+	}(_react.Component);
+	
+	exports.default = PriceGraphBar;
+
+/***/ },
+/* 181 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"main":"pricegraphbar__main___374El","line":"pricegraphbar__line___3kN_d"};
+
+/***/ },
+/* 182 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _pricegraphlabel = __webpack_require__(183);
+	
+	var _pricegraphlabel2 = _interopRequireDefault(_pricegraphlabel);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var PriceGraphLabel = function (_Component) {
+	    _inherits(PriceGraphLabel, _Component);
+	
+	    function PriceGraphLabel(props) {
+	        _classCallCheck(this, PriceGraphLabel);
+	
+	        return _possibleConstructorReturn(this, (PriceGraphLabel.__proto__ || Object.getPrototypeOf(PriceGraphLabel)).call(this, props));
+	    }
+	
+	    _createClass(PriceGraphLabel, [{
+	        key: 'render',
+	        value: function render() {
+	            var top = this.props.yIndex === 0 ? 10 : this.props.yIndex * 100 + 20;
+	            var topVal = top + 'px';
+	            return _react2.default.createElement(
+	                'div',
+	                { style: { top: topVal }, className: _pricegraphlabel2.default.main },
+	                this.props.label
+	            );
+	        }
+	    }]);
+	
+	    return PriceGraphLabel;
+	}(_react.Component);
+	
+	exports.default = PriceGraphLabel;
+
+/***/ },
+/* 183 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"main":"pricegraphlabel__main___3aw1V"};
 
 /***/ }
 /******/ ]);

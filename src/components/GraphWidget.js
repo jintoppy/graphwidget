@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import graphStyle from './graphwidget.css';
-import GraphItem from './GraphItem';
+import PriceGraph from './PriceGraph';
+import TierContainer from './TierContainer';
 
 export default class GraphWidget extends Component {
     constructor(props){
@@ -12,13 +13,6 @@ export default class GraphWidget extends Component {
        
        let widthVal = `${width}%`;
        for(let i=0;i<this.props.noOfDays;i++){
-           let isAnyEventStarting = this.props.events.find(function(event){
-               return event.start === i+1;
-           });
-           let eventItem;
-           if(isAnyEventStarting){
-               eventItem = <GraphItem item={isAnyEventStarting}/>
-           }
            columns.push(
                <div key={i} style={{width: widthVal}} className={graphStyle.dayCol}>
                 
@@ -27,8 +21,12 @@ export default class GraphWidget extends Component {
        }
        return(
             <div className={graphStyle.main}>
-                <div style={{width: this.props.yAxisWidth}} className={graphStyle.yAxis}>This is the yAxis</div>
-                <div className={graphStyle.colWrapper}>{columns}</div>                         
+                <div style={{width: this.props.yAxisWidth}} className={graphStyle.yAxis}></div>
+                <div className={graphStyle.colWrapper}>
+                    {columns}                    
+                </div>
+                <PriceGraph {...this.props} />
+                <TierContainer {...this.props} />                         
             </div>
        ) 
     }

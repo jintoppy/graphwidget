@@ -1,0 +1,13 @@
+.main{
+ text-align: left;
+ padding: 5px;
+ background-color: cornflowerblue;
+ height: 50px;
+ position:absolute;   
+}
+
+.line{
+    width: 1px;
+    background-color: red;
+    position: absolute;
+}

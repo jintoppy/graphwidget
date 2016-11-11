@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack && open index.html"
+    "start": "webpack && open index.html",
+    "watch": "webpack --watch --watch-poll"
   },
   "keywords": [],
   "author": "",

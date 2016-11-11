@@ -7,6 +7,12 @@ export default class App extends Component{
         this.state = {
             noOfDays: 5,
             yAxisWidth: 100,
+            priceGraphVal: [
+                [1,1,21.99,38],
+                [2,2,17.99,45],
+                [3,4, 14.99,50],
+                [5,5,24.99,30]
+            ],
             events: [
                 {
                     start: 1,
@@ -23,10 +29,7 @@ export default class App extends Component{
     }
     render(){
         return (
-                <GraphWidget 
-                    events={this.state.events} 
-                    yAxisWidth = {this.state.yAxisWidth}
-                    noOfDays={this.state.noOfDays} />
+                <GraphWidget {...this.state} />
         )
     }
 }
