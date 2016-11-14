@@ -21469,7 +21469,25 @@
 	            noOfDays: 5,
 	            yAxisWidth: 100,
 	            priceBarHeight: 50,
+	            layout: [30, 50, 20],
+	            tiers: {
+	                "Tier1": [{
+	                    promotionName: "Best Buys",
+	                    startDate: 1,
+	                    endDate: 2,
+	                    price: 21.99,
+	                    percentOff: 45
+	                }],
+	                "Tier2": [{
+	                    promotionName: "Midweek Sale",
+	                    startDate: 2,
+	                    endDate: 3,
+	                    price: 21.99,
+	                    percentOff: 45
+	                }]
+	            },
 	            priceGraphVal: [[1, 1, 21.99, 38], [2, 2, 17.99, 45], [3, 4, 14.99, 50], [5, 5, 24.99, 30]],
+	            bottomTable: [['04/28', 22.99, 5], ['04/29', 22.99, 10], ['04/30', 24.99, 15], ['05/12', 23.99, 10], ['05/13', 24.99, 7]],
 	            events: [{
 	                start: 1,
 	                end: 3,
@@ -21523,6 +21541,10 @@
 	
 	var _TierContainer2 = _interopRequireDefault(_TierContainer);
 	
+	var _GraphFooter = __webpack_require__(184);
+	
+	var _GraphFooter2 = _interopRequireDefault(_GraphFooter);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21559,8 +21581,9 @@
 	                    { className: _graphwidget2.default.colWrapper },
 	                    columns
 	                ),
+	                _react2.default.createElement(_TierContainer2.default, this.props),
 	                _react2.default.createElement(_PriceGraph2.default, this.props),
-	                _react2.default.createElement(_TierContainer2.default, this.props)
+	                _react2.default.createElement(_GraphFooter2.default, this.props)
 	            );
 	        }
 	    }]);
@@ -21741,9 +21764,13 @@
 	            for (var i = 0; i < this.props.noOfDays; i++) {
 	                _loop(i);
 	            }
+	            var style = {
+	                height: this.props.layout[1] + '%',
+	                top: this.props.layout[0] + '%'
+	            };
 	            return _react2.default.createElement(
 	                'div',
-	                { className: _pricegraph2.default.container },
+	                { style: style, className: _pricegraph2.default.container },
 	                _react2.default.createElement(
 	                    'div',
 	                    { style: { width: this.props.yAxisWidth }, className: _pricegraph2.default.yAxis },
@@ -21780,6 +21807,8 @@
 	    value: true
 	});
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _react = __webpack_require__(1);
@@ -21790,6 +21819,10 @@
 	
 	var _tiercontainer2 = _interopRequireDefault(_tiercontainer);
 	
+	var _TierRow = __webpack_require__(188);
+	
+	var _TierRow2 = _interopRequireDefault(_TierRow);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21798,32 +21831,65 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var PriceGraph = function (_Component) {
-	    _inherits(PriceGraph, _Component);
+	var TierContainer = function (_Component) {
+	    _inherits(TierContainer, _Component);
 	
-	    function PriceGraph(props) {
-	        _classCallCheck(this, PriceGraph);
+	    function TierContainer(props) {
+	        _classCallCheck(this, TierContainer);
 	
-	        return _possibleConstructorReturn(this, (PriceGraph.__proto__ || Object.getPrototypeOf(PriceGraph)).call(this, props));
+	        return _possibleConstructorReturn(this, (TierContainer.__proto__ || Object.getPrototypeOf(TierContainer)).call(this, props));
 	    }
 	
-	    _createClass(PriceGraph, [{
+	    _createClass(TierContainer, [{
 	        key: 'render',
 	        value: function render() {
-	            return _react2.default.createElement('div', null);
+	            var heightVal = this.props.layout[0] + '%';
+	            var style = {
+	                height: heightVal
+	            };
+	
+	            var tiers = Object.keys(this.props.tiers),
+	                noOfTiers = tiers.length,
+	                rowHeightVal = 100 / noOfTiers;
+	            var rows = [];
+	            var yAxisItems = [];
+	            for (var tier in this.props.tiers) {
+	                rows.push(_react2.default.createElement(_TierRow2.default, _extends({ key: tier, heightVal: rowHeightVal, item: this.props.tiers[tier] }, this.props)));
+	                yAxisItems.push(_react2.default.createElement(
+	                    'div',
+	                    { style: { height: rowHeightVal }, className: _tiercontainer2.default.yAxisLabel },
+	                    tier
+	                ));
+	            }
+	
+	            return _react2.default.createElement(
+	                'div',
+	                { style: style, className: _tiercontainer2.default.main },
+	                _react2.default.createElement(
+	                    'div',
+	                    { style: { width: this.props.yAxisWidth }, className: _tiercontainer2.default.yAxis },
+	                    yAxisItems
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: _tiercontainer2.default.colWrapper },
+	                    rows
+	                )
+	            );
 	        }
 	    }]);
 	
-	    return PriceGraph;
+	    return TierContainer;
 	}(_react.Component);
 	
-	exports.default = PriceGraph;
+	exports.default = TierContainer;
 
 /***/ },
 /* 179 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
+	module.exports = {"main":"tiercontainer__main___2uPJi","col":"tiercontainer__col___1VGWQ","colWrapper":"tiercontainer__colWrapper___25ZWB","yAxis":"tiercontainer__yAxis___1Y194","row":"tiercontainer__row___3IXjn"};
 
 /***/ },
 /* 180 */
@@ -21985,6 +22051,290 @@
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"main":"pricegraphlabel__main___3aw1V"};
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _graphfooter = __webpack_require__(185);
+	
+	var _graphfooter2 = _interopRequireDefault(_graphfooter);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var GraphFooter = function (_Component) {
+	    _inherits(GraphFooter, _Component);
+	
+	    function GraphFooter(props) {
+	        _classCallCheck(this, GraphFooter);
+	
+	        return _possibleConstructorReturn(this, (GraphFooter.__proto__ || Object.getPrototypeOf(GraphFooter)).call(this, props));
+	    }
+	
+	    _createClass(GraphFooter, [{
+	        key: 'render',
+	        value: function render() {
+	            var style = {
+	                top: this.props.layout[0] + this.props.layout[1] + '%',
+	                height: this.props.layout[2] + '%'
+	            };
+	
+	            var width = 100 / this.props.noOfDays;
+	
+	            var widthVal = width + '%';
+	
+	            var columns = this.props.bottomTable.map(function (data, i) {
+	                return _react2.default.createElement(
+	                    'div',
+	                    { key: i, style: { width: widthVal }, className: _graphfooter2.default.col },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: _graphfooter2.default.label },
+	                        i + 1
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: _graphfooter2.default.label },
+	                        data[0]
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: _graphfooter2.default.label },
+	                        data[1]
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: _graphfooter2.default.label },
+	                        data[2],
+	                        '%'
+	                    )
+	                );
+	            });
+	
+	            return _react2.default.createElement(
+	                'div',
+	                { style: style, className: _graphfooter2.default.main },
+	                _react2.default.createElement(
+	                    'div',
+	                    { style: { width: this.props.yAxisWidth }, className: _graphfooter2.default.yAxis },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: _graphfooter2.default.yAxisLabel },
+	                        'Ty'
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: _graphfooter2.default.yAxisLabel },
+	                        'LY Plan Off'
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: _graphfooter2.default.yAxisLabel },
+	                        'LY Plan Off Price'
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: _graphfooter2.default.yAxisLabel },
+	                        'Off Units Share'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: _graphfooter2.default.colWrapper },
+	                    columns
+	                )
+	            );
+	        }
+	    }]);
+	
+	    return GraphFooter;
+	}(_react.Component);
+	
+	exports.default = GraphFooter;
+
+/***/ },
+/* 185 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"main":"graphfooter__main___8xTZF","col":"graphfooter__col___3e-aw","colWrapper":"graphfooter__colWrapper___3hHTh","yAxis":"graphfooter__yAxis___2Alcu","yAxisLabel":"graphfooter__yAxisLabel___1qNxd","label":"graphfooter__label___336wn"};
+
+/***/ },
+/* 186 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _tieritem = __webpack_require__(187);
+	
+	var _tieritem2 = _interopRequireDefault(_tieritem);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var TierItem = function (_Component) {
+	    _inherits(TierItem, _Component);
+	
+	    function TierItem(props) {
+	        _classCallCheck(this, TierItem);
+	
+	        return _possibleConstructorReturn(this, (TierItem.__proto__ || Object.getPrototypeOf(TierItem)).call(this, props));
+	    }
+	
+	    _createClass(TierItem, [{
+	        key: 'render',
+	        value: function render() {
+	            var style = {
+	                width: this.props.widthVal + '%'
+	            };
+	            return _react2.default.createElement(
+	                'div',
+	                { style: style, className: _tieritem2.default.main },
+	                this.props.item.promotionName
+	            );
+	        }
+	    }]);
+	
+	    return TierItem;
+	}(_react.Component);
+	
+	exports.default = TierItem;
+
+/***/ },
+/* 187 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"main":"tieritem__main___2DzGY"};
+
+/***/ },
+/* 188 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _TierItem = __webpack_require__(186);
+	
+	var _TierItem2 = _interopRequireDefault(_TierItem);
+	
+	var _tierrow = __webpack_require__(189);
+	
+	var _tierrow2 = _interopRequireDefault(_tierrow);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var TierRow = function (_Component) {
+	    _inherits(TierRow, _Component);
+	
+	    function TierRow(props) {
+	        _classCallCheck(this, TierRow);
+	
+	        return _possibleConstructorReturn(this, (TierRow.__proto__ || Object.getPrototypeOf(TierRow)).call(this, props));
+	    }
+	
+	    _createClass(TierRow, [{
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+	
+	            var columns = [];
+	            var width = 100 / this.props.noOfDays;
+	
+	            var _loop = function _loop(i) {
+	                var tierPromoComponent = void 0;
+	                var tierItem = _this2.props.item.find(function (promotion) {
+	                    return promotion.startDate === i + 1;
+	                });
+	
+	                if (tierItem) {
+	                    var widthVal = ((tierItem.startDate === tierItem.endDate ? 1 : tierItem.endDate - tierItem.startDate) + 1) * 100;
+	                    tierPromoComponent = _react2.default.createElement(_TierItem2.default, {
+	                        item: tierItem,
+	                        key: i,
+	                        widthVal: widthVal
+	                    });
+	                }
+	                columns.push(_react2.default.createElement(
+	                    'div',
+	                    { key: i, className: _tierrow2.default.col },
+	                    tierPromoComponent
+	                ));
+	            };
+	
+	            for (var i = 0; i < this.props.noOfDays; i++) {
+	                _loop(i);
+	            }
+	            var style = {
+	                height: this.props.heightVal + '%'
+	            };
+	            return _react2.default.createElement(
+	                'div',
+	                { style: style, className: _tierrow2.default.main },
+	                columns
+	            );
+	        }
+	    }]);
+	
+	    return TierRow;
+	}(_react.Component);
+	
+	exports.default = TierRow;
+
+/***/ },
+/* 189 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"main":"tierrow__main___Ylxsz","col":"tierrow__col___1UveW"};
 
 /***/ }
 /******/ ]);

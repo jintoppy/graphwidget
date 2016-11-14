@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import graphStyle from './graphwidget.css';
 import PriceGraph from './PriceGraph';
 import TierContainer from './TierContainer';
+import GraphFooter from './GraphFooter';
 
 export default class GraphWidget extends Component {
     constructor(props){
@@ -25,8 +26,9 @@ export default class GraphWidget extends Component {
                 <div className={graphStyle.colWrapper}>
                     {columns}                    
                 </div>
-                <PriceGraph {...this.props} />
-                <TierContainer {...this.props} />                         
+                <TierContainer {...this.props} /> 
+                <PriceGraph {...this.props} />                
+                <GraphFooter {...this.props} />                        
             </div>
        ) 
     }

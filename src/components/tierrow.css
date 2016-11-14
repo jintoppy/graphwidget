@@ -1,0 +1,13 @@
+.main{
+    position: relative;
+    width: 100%;   
+    border-bottom: 1px solid #000;
+}
+
+.col{
+    padding: 0px;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    border-right: none;
+}

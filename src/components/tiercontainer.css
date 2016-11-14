@@ -1,0 +1,32 @@
+.main{
+    position: absolute;
+    display: flex;
+    flex-flow: row wrap;
+    align-content: stretch;
+    width: 100%; 
+    top: 0;
+}
+
+.col{
+    padding: 0px;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    border-right: none;
+}
+
+.colWrapper{
+    display: flex;
+    flex: 1;
+}
+
+.yAxis{
+    text-align: right;
+    padding-right: 5px;
+    position: relative;
+    padding-top: 10px;
+}
+.row{
+    width: 100%;
+    border-bottom: 1px solid #000;
+}

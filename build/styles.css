@@ -30,7 +30,6 @@
     position: absolute;
     display: flex;
     flex-flow: row wrap;
-    height: 100%;
     align-content: stretch;
     width: 100%;
 }
@@ -76,5 +75,97 @@
     text-align: right;
     padding-right: 5px;
     width: 100%;
+}.tiercontainer__main___2uPJi{
+    position: absolute;
+    display: flex;
+    flex-flow: row wrap;
+    align-content: stretch;
+    width: 100%; 
+    top: 0;
+}
+
+.tiercontainer__col___1VGWQ{
+    padding: 0px;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    border-right: none;
+}
+
+.tiercontainer__colWrapper___25ZWB{
+    display: flex;
+    flex: 1;
+}
+
+.tiercontainer__yAxis___1Y194{
+    text-align: right;
+    padding-right: 5px;
+    position: relative;
+    padding-top: 10px;
+}
+.tiercontainer__row___3IXjn{
+    width: 100%;
+    border-bottom: 1px solid #000;
+}.tieritem__main___2DzGY{
+    height: 100%;
+    background-color: #f5f5f5;
+    color: blue;
+    text-align: left;
+    padding: 20px 10px;
+    border-left: 1px solid #000;
+}.tierrow__main___Ylxsz{
+    position: relative;
+    width: 100%;   
+    border-bottom: 1px solid #000;
+}
+
+.tierrow__col___1UveW{
+    padding: 0px;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    border-right: none;
+}.graphfooter__main___8xTZF{
+   position: absolute;
+   display: flex;
+   flex-flow: row wrap;
+   align-content: stretch;
+   width: 100%;   
+   
+}
+
+.graphfooter__col___3e-aw{
+    padding: 0px;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    border-right: none;
+}
+
+.graphfooter__colWrapper___3hHTh{
+    display: flex;
+    border-top: 1px solid #000;
+    flex: 1;
+    padding-top: 10px;
+}
+
+.graphfooter__yAxis___2Alcu{
+    text-align: right;
+    padding-right: 5px;
+    position: relative;
+    padding-top: 10px;
+}
+
+.graphfooter__yAxisLabel___1qNxd{
+    padding-bottom: 10px;
+    text-align: right;
+    font-size: 13px;
+}
+
+.graphfooter__label___336wn{
+    padding-bottom: 10px;
+    padding-left: 25px;
+    text-align: left;
+    font-size: 13px;
 }
 /*# sourceMappingURL=styles.css.map*/

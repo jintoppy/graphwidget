@@ -2,7 +2,6 @@
     position: absolute;
     display: flex;
     flex-flow: row wrap;
-    height: 100%;
     align-content: stretch;
     width: 100%;
 }

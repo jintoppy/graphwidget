@@ -110,8 +110,12 @@ export default class PriceGraph extends Component{
                </div>
                )
        }
+       let style = {
+           height: `${this.props.layout[1]}%`,
+           top: `${this.props.layout[0]}%`
+       }
         return (
-            <div className={priceGraphStyle.container}>
+            <div style={style} className={priceGraphStyle.container}>
                 <div style={{width: this.props.yAxisWidth}} className={priceGraphStyle.yAxis}>
                         {yAxisLabels}
                 </div>
