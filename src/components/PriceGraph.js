@@ -7,6 +7,27 @@ export default class PriceGraph extends Component{
     constructor(props){
         super(props);
     }
+    previousItemFinder(index, availableDatesList){
+        if(index===0){
+            return index;
+        }
+        if(availableDatesList.indexOf(index) > -1){
+            return index;
+        }
+        else{
+            let gotResult=false;
+            let lastIndex = index;
+            while(!gotResult){
+                if(availableDatesList.indexOf(lastIndex) > -1){
+                    gotResult = true;
+                }
+                else{
+                    lastIndex--;
+                }
+            }
+            return lastIndex;
+        }
+    }
     render(){
         let columns = [];
        let width = 100/this.props.noOfDays;
@@ -14,47 +35,23 @@ export default class PriceGraph extends Component{
        let widthVal = `${width}%`;
        let sortedArr = this.props.priceGraphVal.map((item) => item[2]).sort((a, b)=> b-a);
 
-       let yAxisLabels=[];
+       //let yAxisLabels=[];
        let availableDatesList = this.props.priceGraphVal.map((x) => x[0]);
-       
-       for(let i=0;i<sortedArr.length;i++){
+
+       let yAxisLabels = sortedArr.map((item, i) => {
            let topPercentage = (100/this.props.noOfDays) * i;
-           yAxisLabels.push(<PriceGraphLabel 
+           return <PriceGraphLabel 
                                 key={i} 
                                 yIndex={i} 
                                 topPercentage={topPercentage}
-                                label={sortedArr[i]} 
+                                label={item} 
                                 priceBarHeight={this.props.priceBarHeight}
-                            />);
-       }
+                            />
+       });
 
        for(let i=0;i<this.props.noOfDays;i++){
-           let previousItemFinder = (function(index){
-               if(index===0){
-                   return index;
-               }
-               if(availableDatesList.indexOf(index) > -1){
-                   return index;
-               }
-               else{
-                   let gotResult=false;
-                   let lastIndex = index;
-                   while(!gotResult){
-                       if(availableDatesList.indexOf(lastIndex) > -1){
-                           gotResult = true;
-                       }
-                       else{
-                           lastIndex--;
-                       }
-                   }
-                   return lastIndex;
-               }
-
-           })(i);
-
-
            let previousItemIndex = this.props.priceGraphVal.findIndex((val)=> {
-               return val[0] === previousItemFinder;
+               return val[0] === this.previousItemFinder(i, availableDatesList);
            });
 
            let nextItemIndex = this.props.priceGraphVal.findIndex((val)=> {
@@ -77,12 +74,9 @@ export default class PriceGraph extends Component{
                    let nextItem = this.props.priceGraphVal[nextItemIndex];
                    let nextItemYIndex = sortedArr.indexOf(nextItem[2]);
                    let nextItemTopPercentage = (100/this.props.noOfDays) * nextItemYIndex;
-                   let heightOfItem = (nextItemTopPercentage-topPercentage) - this.props.priceBarHeight;
                    if(nextItemYIndex>yIndex){
                        rightLineDetails = {
-                           heightDimension: nextItemYIndex - yIndex,
-                           nextItemTopPercentage: nextItemTopPercentage,
-                           heightOfItem: `calc(${nextItemTopPercentage-topPercentage}% - ${this.props.priceBarHeight}px)`
+                           nextItemTopPercentage: nextItemTopPercentage
                        }
                    }
                }  
@@ -94,12 +88,10 @@ export default class PriceGraph extends Component{
                    let prevItemTopPercentage = (100/this.props.noOfDays) * prevItemYIndex;
                    if(prevItemYIndex>yIndex){
                        leftLineDetails = {
-                           heightDimension: prevItemYIndex - yIndex,
                            prevItemTopPercentage: prevItemTopPercentage
                        }
                    }
-               }
-               
+               }               
                
                barItem =  <PriceGraphBar
                                 topPercentage={topPercentage} 

@@ -1,13 +1,14 @@
 .main{
  text-align: left;
  padding: 5px;
- background-color: cornflowerblue;
+ background-color: #3f69b5;
  position:absolute;   
+ color: #fff;
 }
 
 .line{
     width: 1px;
-    background-color: red;
+    background-color: #3f69b5;
     position: absolute;
 }
 

@@ -38,7 +38,9 @@ export default class PriceGraphBar extends Component {
         return (
             <div className={priceGraphBarStyle.container}>
                 <div style={barStyle} className={priceGraphBarStyle.main}>
-                    {this.props.item[2]}
+                    ${this.props.item[2]}
+                    <br/>
+                    {this.props.item[3]}% off
                 </div>
                 {leftLine}
                 {rightLine}

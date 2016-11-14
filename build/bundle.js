@@ -21624,6 +21624,27 @@
 	    }
 	
 	    _createClass(PriceGraph, [{
+	        key: 'previousItemFinder',
+	        value: function previousItemFinder(index, availableDatesList) {
+	            if (index === 0) {
+	                return index;
+	            }
+	            if (availableDatesList.indexOf(index) > -1) {
+	                return index;
+	            } else {
+	                var gotResult = false;
+	                var lastIndex = index;
+	                while (!gotResult) {
+	                    if (availableDatesList.indexOf(lastIndex) > -1) {
+	                        gotResult = true;
+	                    } else {
+	                        lastIndex--;
+	                    }
+	                }
+	                return lastIndex;
+	            }
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var _this2 = this;
@@ -21638,53 +21659,33 @@
 	                return b - a;
 	            });
 	
-	            var yAxisLabels = [];
+	            //let yAxisLabels=[];
 	            var availableDatesList = this.props.priceGraphVal.map(function (x) {
 	                return x[0];
 	            });
 	
-	            for (var i = 0; i < sortedArr.length; i++) {
-	                var topPercentage = 100 / this.props.noOfDays * i;
-	                yAxisLabels.push(_react2.default.createElement(_PriceGraphLabel2.default, {
+	            var yAxisLabels = sortedArr.map(function (item, i) {
+	                var topPercentage = 100 / _this2.props.noOfDays * i;
+	                return _react2.default.createElement(_PriceGraphLabel2.default, {
 	                    key: i,
 	                    yIndex: i,
 	                    topPercentage: topPercentage,
-	                    label: sortedArr[i],
-	                    priceBarHeight: this.props.priceBarHeight
-	                }));
-	            }
+	                    label: item,
+	                    priceBarHeight: _this2.props.priceBarHeight
+	                });
+	            });
 	
-	            var _loop = function _loop(_i) {
-	                var previousItemFinder = function (index) {
-	                    if (index === 0) {
-	                        return index;
-	                    }
-	                    if (availableDatesList.indexOf(index) > -1) {
-	                        return index;
-	                    } else {
-	                        var gotResult = false;
-	                        var lastIndex = index;
-	                        while (!gotResult) {
-	                            if (availableDatesList.indexOf(lastIndex) > -1) {
-	                                gotResult = true;
-	                            } else {
-	                                lastIndex--;
-	                            }
-	                        }
-	                        return lastIndex;
-	                    }
-	                }(_i);
-	
+	            var _loop = function _loop(i) {
 	                var previousItemIndex = _this2.props.priceGraphVal.findIndex(function (val) {
-	                    return val[0] === previousItemFinder;
+	                    return val[0] === _this2.previousItemFinder(i, availableDatesList);
 	                });
 	
 	                var nextItemIndex = _this2.props.priceGraphVal.findIndex(function (val) {
-	                    return val[0] === _i + 2;
+	                    return val[0] === i + 2;
 	                });
 	
 	                var priceBarIndex = _this2.props.priceGraphVal.findIndex(function (val) {
-	                    return val[0] === _i + 1;
+	                    return val[0] === i + 1;
 	                });
 	
 	                var barItem = void 0;
@@ -21692,7 +21693,7 @@
 	                    var isPriceBarFound = _this2.props.priceGraphVal[priceBarIndex];
 	                    var yIndex = sortedArr.indexOf(isPriceBarFound[2]);
 	                    var widthOfBar = 100 * (isPriceBarFound[1] - isPriceBarFound[0] + 1);
-	                    var _topPercentage = 100 / _this2.props.noOfDays * yIndex;
+	                    var topPercentage = 100 / _this2.props.noOfDays * yIndex;
 	                    var rightLineDetails = void 0,
 	                        leftLineDetails = void 0;
 	                    //for Finding the next Item details
@@ -21700,12 +21701,9 @@
 	                        var nextItem = _this2.props.priceGraphVal[nextItemIndex];
 	                        var nextItemYIndex = sortedArr.indexOf(nextItem[2]);
 	                        var nextItemTopPercentage = 100 / _this2.props.noOfDays * nextItemYIndex;
-	                        var heightOfItem = nextItemTopPercentage - _topPercentage - _this2.props.priceBarHeight;
 	                        if (nextItemYIndex > yIndex) {
 	                            rightLineDetails = {
-	                                heightDimension: nextItemYIndex - yIndex,
-	                                nextItemTopPercentage: nextItemTopPercentage,
-	                                heightOfItem: 'calc(' + (nextItemTopPercentage - _topPercentage) + '% - ' + _this2.props.priceBarHeight + 'px)'
+	                                nextItemTopPercentage: nextItemTopPercentage
 	                            };
 	                        }
 	                    }
@@ -21717,14 +21715,13 @@
 	                        var prevItemTopPercentage = 100 / _this2.props.noOfDays * prevItemYIndex;
 	                        if (prevItemYIndex > yIndex) {
 	                            leftLineDetails = {
-	                                heightDimension: prevItemYIndex - yIndex,
 	                                prevItemTopPercentage: prevItemTopPercentage
 	                            };
 	                        }
 	                    }
 	
 	                    barItem = _react2.default.createElement(_PriceGraphBar2.default, {
-	                        topPercentage: _topPercentage,
+	                        topPercentage: topPercentage,
 	                        yIndex: yIndex,
 	                        indexOfItem: priceBarIndex,
 	                        currWidth: widthOfBar,
@@ -21736,13 +21733,13 @@
 	                }
 	                columns.push(_react2.default.createElement(
 	                    'div',
-	                    { key: _i, style: { width: widthVal }, className: _pricegraph2.default.col },
+	                    { key: i, style: { width: widthVal }, className: _pricegraph2.default.col },
 	                    barItem
 	                ));
 	            };
 	
-	            for (var _i = 0; _i < this.props.noOfDays; _i++) {
-	                _loop(_i);
+	            for (var i = 0; i < this.props.noOfDays; i++) {
+	                _loop(i);
 	            }
 	            return _react2.default.createElement(
 	                'div',
@@ -21771,7 +21768,7 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"container":"pricegraph__container___2kdZg","col":"pricegraph__col___13WB-","colWrapper":"pricegraph__colWrapper___Npw_E"};
+	module.exports = {"container":"pricegraph__container___2kdZg","col":"pricegraph__col___13WB-","colWrapper":"pricegraph__colWrapper___Npw_E","yAxis":"pricegraph__yAxis___1e6S0"};
 
 /***/ },
 /* 178 */
@@ -21903,7 +21900,11 @@
 	                _react2.default.createElement(
 	                    'div',
 	                    { style: barStyle, className: _pricegraphbar2.default.main },
-	                    this.props.item[2]
+	                    '$',
+	                    this.props.item[2],
+	                    _react2.default.createElement('br', null),
+	                    this.props.item[3],
+	                    '% off'
 	                ),
 	                leftLine,
 	                rightLine
@@ -21963,10 +21964,11 @@
 	    _createClass(PriceGraphLabel, [{
 	        key: 'render',
 	        value: function render() {
-	            var topVal = this.props.topPercentage ? 'calc(' + this.props.topPercentage + '% - ' + this.props.priceBarHeight + 'px + 30px)' : 20;
+	            var topVal = this.props.topPercentage ? 'calc(' + this.props.topPercentage + '% - ' + this.props.priceBarHeight + 'px + ' + this.props.priceBarHeight / 2 + 'px)' : 20;
 	            return _react2.default.createElement(
 	                'div',
 	                { style: { top: topVal }, className: _pricegraphlabel2.default.main },
+	                '$',
 	                this.props.label
 	            );
 	        }

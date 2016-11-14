@@ -6,10 +6,10 @@ export default class PriceGraphLabel extends Component{
         super(props);
     }
     render(){
-        let topVal = this.props.topPercentage? `calc(${this.props.topPercentage}% - ${this.props.priceBarHeight}px + 30px)`: 20;
+        let topVal = this.props.topPercentage? `calc(${this.props.topPercentage}% - ${this.props.priceBarHeight}px + ${this.props.priceBarHeight/2}px)`: 20;
         return (
             <div style={{top: topVal}} className={priceGraphLabelStyle.main}>
-                {this.props.label}
+                ${this.props.label}
             </div>
         )
     }

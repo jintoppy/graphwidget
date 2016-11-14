@@ -45,16 +45,23 @@
 .pricegraph__colWrapper___Npw_E{
     display: flex;
     flex: 1;
+}
+
+.pricegraph__yAxis___1e6S0{
+    text-align: right;
+    padding-right: 5px;
+    position: relative;
 }.pricegraphbar__main___374El{
  text-align: left;
  padding: 5px;
- background-color: cornflowerblue;
+ background-color: #3f69b5;
  position:absolute;   
+ color: #fff;
 }
 
 .pricegraphbar__line___3kN_d{
     width: 1px;
-    background-color: red;
+    background-color: #3f69b5;
     position: absolute;
 }
 
@@ -66,5 +73,8 @@
     left: 0;
 }.pricegraphlabel__main___3aw1V{
     position: absolute;
+    text-align: right;
+    padding-right: 5px;
+    width: 100%;
 }
 /*# sourceMappingURL=styles.css.map*/
