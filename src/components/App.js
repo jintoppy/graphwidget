@@ -7,6 +7,7 @@ export default class App extends Component{
         this.state = {
             noOfDays: 5,
             yAxisWidth: 100,
+            priceBarHeight: 50,
             priceGraphVal: [
                 [1,1,21.99,38],
                 [2,2,17.99,45],

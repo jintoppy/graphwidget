@@ -16,8 +16,16 @@ export default class PriceGraph extends Component{
 
        let yAxisLabels=[];
        let availableDatesList = this.props.priceGraphVal.map((x) => x[0]);
+       
        for(let i=0;i<sortedArr.length;i++){
-           yAxisLabels.push(<PriceGraphLabel key={i} yIndex={i} label={sortedArr[i]} />);
+           let topPercentage = (100/this.props.noOfDays) * i;
+           yAxisLabels.push(<PriceGraphLabel 
+                                key={i} 
+                                yIndex={i} 
+                                topPercentage={topPercentage}
+                                label={sortedArr[i]} 
+                                priceBarHeight={this.props.priceBarHeight}
+                            />);
        }
 
        for(let i=0;i<this.props.noOfDays;i++){
@@ -62,14 +70,19 @@ export default class PriceGraph extends Component{
                let isPriceBarFound = this.props.priceGraphVal[priceBarIndex];
                let yIndex = sortedArr.indexOf(isPriceBarFound[2]);
                let widthOfBar = 100 * ((isPriceBarFound[1]-isPriceBarFound[0])+1);
+               let topPercentage = (100/this.props.noOfDays) * yIndex;
                let rightLineDetails, leftLineDetails;
                //for Finding the next Item details
                if(nextItemIndex > -1){
                    let nextItem = this.props.priceGraphVal[nextItemIndex];
                    let nextItemYIndex = sortedArr.indexOf(nextItem[2]);
+                   let nextItemTopPercentage = (100/this.props.noOfDays) * nextItemYIndex;
+                   let heightOfItem = (nextItemTopPercentage-topPercentage) - this.props.priceBarHeight;
                    if(nextItemYIndex>yIndex){
                        rightLineDetails = {
-                           heightDimension: nextItemYIndex - yIndex
+                           heightDimension: nextItemYIndex - yIndex,
+                           nextItemTopPercentage: nextItemTopPercentage,
+                           heightOfItem: `calc(${nextItemTopPercentage-topPercentage}% - ${this.props.priceBarHeight}px)`
                        }
                    }
                }  
@@ -78,20 +91,25 @@ export default class PriceGraph extends Component{
                if(previousItemIndex > -1){
                    let prevItem = this.props.priceGraphVal[previousItemIndex];
                    let prevItemYIndex = sortedArr.indexOf(prevItem[2]);
+                   let prevItemTopPercentage = (100/this.props.noOfDays) * prevItemYIndex;
                    if(prevItemYIndex>yIndex){
                        leftLineDetails = {
-                           heightDimension: prevItemYIndex - yIndex
+                           heightDimension: prevItemYIndex - yIndex,
+                           prevItemTopPercentage: prevItemTopPercentage
                        }
                    }
                }
-
-               barItem =  <PriceGraphBar 
+               
+               
+               barItem =  <PriceGraphBar
+                                topPercentage={topPercentage} 
                                 yIndex={yIndex} 
                                 indexOfItem={priceBarIndex} 
                                 currWidth={widthOfBar} 
                                 item={isPriceBarFound}
                                 rightLineDetails={rightLineDetails}
                                 leftLineDetails={leftLineDetails}
+                                priceBarHeight={this.props.priceBarHeight}
                             />
            }
            columns.push(

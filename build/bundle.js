@@ -21468,6 +21468,7 @@
 	        _this.state = {
 	            noOfDays: 5,
 	            yAxisWidth: 100,
+	            priceBarHeight: 50,
 	            priceGraphVal: [[1, 1, 21.99, 38], [2, 2, 17.99, 45], [3, 4, 14.99, 50], [5, 5, 24.99, 30]],
 	            events: [{
 	                start: 1,
@@ -21641,8 +21642,16 @@
 	            var availableDatesList = this.props.priceGraphVal.map(function (x) {
 	                return x[0];
 	            });
+	
 	            for (var i = 0; i < sortedArr.length; i++) {
-	                yAxisLabels.push(_react2.default.createElement(_PriceGraphLabel2.default, { key: i, yIndex: i, label: sortedArr[i] }));
+	                var topPercentage = 100 / this.props.noOfDays * i;
+	                yAxisLabels.push(_react2.default.createElement(_PriceGraphLabel2.default, {
+	                    key: i,
+	                    yIndex: i,
+	                    topPercentage: topPercentage,
+	                    label: sortedArr[i],
+	                    priceBarHeight: this.props.priceBarHeight
+	                }));
 	            }
 	
 	            var _loop = function _loop(_i) {
@@ -21683,15 +21692,20 @@
 	                    var isPriceBarFound = _this2.props.priceGraphVal[priceBarIndex];
 	                    var yIndex = sortedArr.indexOf(isPriceBarFound[2]);
 	                    var widthOfBar = 100 * (isPriceBarFound[1] - isPriceBarFound[0] + 1);
+	                    var _topPercentage = 100 / _this2.props.noOfDays * yIndex;
 	                    var rightLineDetails = void 0,
 	                        leftLineDetails = void 0;
 	                    //for Finding the next Item details
 	                    if (nextItemIndex > -1) {
 	                        var nextItem = _this2.props.priceGraphVal[nextItemIndex];
 	                        var nextItemYIndex = sortedArr.indexOf(nextItem[2]);
+	                        var nextItemTopPercentage = 100 / _this2.props.noOfDays * nextItemYIndex;
+	                        var heightOfItem = nextItemTopPercentage - _topPercentage - _this2.props.priceBarHeight;
 	                        if (nextItemYIndex > yIndex) {
 	                            rightLineDetails = {
-	                                heightDimension: nextItemYIndex - yIndex
+	                                heightDimension: nextItemYIndex - yIndex,
+	                                nextItemTopPercentage: nextItemTopPercentage,
+	                                heightOfItem: 'calc(' + (nextItemTopPercentage - _topPercentage) + '% - ' + _this2.props.priceBarHeight + 'px)'
 	                            };
 	                        }
 	                    }
@@ -21700,20 +21714,24 @@
 	                    if (previousItemIndex > -1) {
 	                        var prevItem = _this2.props.priceGraphVal[previousItemIndex];
 	                        var prevItemYIndex = sortedArr.indexOf(prevItem[2]);
+	                        var prevItemTopPercentage = 100 / _this2.props.noOfDays * prevItemYIndex;
 	                        if (prevItemYIndex > yIndex) {
 	                            leftLineDetails = {
-	                                heightDimension: prevItemYIndex - yIndex
+	                                heightDimension: prevItemYIndex - yIndex,
+	                                prevItemTopPercentage: prevItemTopPercentage
 	                            };
 	                        }
 	                    }
 	
 	                    barItem = _react2.default.createElement(_PriceGraphBar2.default, {
+	                        topPercentage: _topPercentage,
 	                        yIndex: yIndex,
 	                        indexOfItem: priceBarIndex,
 	                        currWidth: widthOfBar,
 	                        item: isPriceBarFound,
 	                        rightLineDetails: rightLineDetails,
-	                        leftLineDetails: leftLineDetails
+	                        leftLineDetails: leftLineDetails,
+	                        priceBarHeight: _this2.props.priceBarHeight
 	                    });
 	                }
 	                columns.push(_react2.default.createElement(
@@ -21851,34 +21869,42 @@
 	        key: 'render',
 	        value: function render() {
 	            var widthVal = this.props.currWidth + '%';
-	            var topVal = this.props.yIndex * 100 + 'px';
-	
+	            //let topVal = `${this.props.yIndex*this.props.priceBarHeight*2}px`;
+	            var topVal = this.props.topPercentage ? 'calc(' + this.props.topPercentage + '% - ' + this.props.priceBarHeight + 'px)' : 0;
 	            var leftLine = void 0,
 	                rightLine = void 0;
 	            if (this.props.rightLineDetails) {
-	                var heightVal = this.props.rightLineDetails.heightDimension * 50;
+	                var heightVal = 'calc(' + (this.props.rightLineDetails.nextItemTopPercentage - this.props.topPercentage) + '% - ' + this.props.priceBarHeight + 'px)';
 	                var style = {
 	                    height: heightVal,
-	                    top: '100%',
+	                    top: this.props.topPercentage ? 'calc(' + this.props.topPercentage + '%' : 0,
 	                    left: '100%'
 	                };
 	                rightLine = _react2.default.createElement('div', { style: style, className: _pricegraphbar2.default.line });
 	            }
 	
 	            if (this.props.leftLineDetails) {
-	                var _heightVal = this.props.leftLineDetails.heightDimension * 100 - 50;
+	                var _heightVal = 'calc(' + (this.props.leftLineDetails.prevItemTopPercentage - this.props.topPercentage) + '% - ' + this.props.priceBarHeight * 2 + 'px)';
 	                var _style = {
 	                    height: _heightVal,
-	                    top: '100%',
+	                    top: this.props.topPercentage ? 'calc(' + this.props.topPercentage + '% + ' + this.props.priceBarHeight + 'px' : this.props.priceBarHeight + 'px',
 	                    left: '-1px'
 	                };
 	                leftLine = _react2.default.createElement('div', { style: _style, className: _pricegraphbar2.default.line });
 	            }
-	
+	            var barStyle = {
+	                height: this.props.priceBarHeight,
+	                width: widthVal,
+	                top: topVal
+	            };
 	            return _react2.default.createElement(
 	                'div',
-	                { style: { width: widthVal, top: topVal }, className: _pricegraphbar2.default.main },
-	                this.props.item[2],
+	                { className: _pricegraphbar2.default.container },
+	                _react2.default.createElement(
+	                    'div',
+	                    { style: barStyle, className: _pricegraphbar2.default.main },
+	                    this.props.item[2]
+	                ),
 	                leftLine,
 	                rightLine
 	            );
@@ -21895,7 +21921,7 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"main":"pricegraphbar__main___374El","line":"pricegraphbar__line___3kN_d"};
+	module.exports = {"main":"pricegraphbar__main___374El","line":"pricegraphbar__line___3kN_d","container":"pricegraphbar__container___3tLRg"};
 
 /***/ },
 /* 182 */
@@ -21937,8 +21963,7 @@
 	    _createClass(PriceGraphLabel, [{
 	        key: 'render',
 	        value: function render() {
-	            var top = this.props.yIndex === 0 ? 10 : this.props.yIndex * 100 + 20;
-	            var topVal = top + 'px';
+	            var topVal = this.props.topPercentage ? 'calc(' + this.props.topPercentage + '% - ' + this.props.priceBarHeight + 'px + 30px)' : 20;
 	            return _react2.default.createElement(
 	                'div',
 	                { style: { top: topVal }, className: _pricegraphlabel2.default.main },
