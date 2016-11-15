@@ -41,6 +41,7 @@ export default class PriceGraphBar extends Component {
                     ${this.props.item[2]}
                     <br/>
                     {this.props.item[3]}% off
+                    <i className={priceGraphBarStyle.icon} />
                 </div>
                 {leftLine}
                 {rightLine}

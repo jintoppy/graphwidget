@@ -19,7 +19,7 @@ export default class TierContainer extends Component{
         let yAxisItems = [];
         for(let tier in this.props.tiers){
             rows.push(<TierRow key={tier} heightVal={rowHeightVal} item={this.props.tiers[tier]} {...this.props} />);
-            yAxisItems.push(<div style={{height: rowHeightVal}} className={tierStyle.yAxisLabel}>
+            yAxisItems.push(<div key={tier} style={{height: `${rowHeightVal}%`}} className={tierStyle.yAxisLabel}>
                 {tier}
             </div>);
         }

@@ -4,6 +4,7 @@ import PriceGraph from './PriceGraph';
 import TierContainer from './TierContainer';
 import GraphFooter from './GraphFooter';
 
+
 export default class GraphWidget extends Component {
     constructor(props){
         super(props)

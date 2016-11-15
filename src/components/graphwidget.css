@@ -4,8 +4,12 @@
     height: 100%;
     align-content: stretch;
 }
+.main *{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
 .dayCol {
-    border-left: 1px solid #888;
+    border-left: 1px solid #d4d4d4;
     padding: 5px;
     flex: 1;
     text-align: center;
@@ -16,7 +20,7 @@
     background-color: #f5f5f5;
 }
 .dayCol:last-child{
-    border-right: 1px solid #888;
+    border-right: 1px solid #d4d4d4;
 }
 
 .yAxis{

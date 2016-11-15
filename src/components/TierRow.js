@@ -31,11 +31,11 @@ export default class TierRow extends Component{
                 </div>
             );
        }
-       let style = {
-           height: `${this.props.heightVal}%`
-       }
+    //    let style = {
+    //        height: `${this.props.heightVal}%`
+    //    }
        return (
-            <div style={style} className={tierRowStyle.main}>
+            <div className={tierRowStyle.main}>
                 {columns}                       
             </div>
        )

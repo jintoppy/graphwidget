@@ -7,7 +7,8 @@ export default class TierItem extends Component{
     }
     render(){
         let style = {
-            width: `${this.props.widthVal}%`
+            width: `${this.props.widthVal}%`,
+            paddingLeft: `${(this.props.widthVal/2)-10}%`
         }
         return (<div style={style} className={tierItemStyle.main}>
                 {this.props.item.promotionName}

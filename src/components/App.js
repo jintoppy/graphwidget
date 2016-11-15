@@ -8,7 +8,7 @@ export default class App extends Component{
             noOfDays: 5,
             yAxisWidth: 100,
             priceBarHeight: 50,
-            layout: [30,50,20],
+            layout: [20,60,20],
             tiers: {
                 "Tier1": [
                     {
