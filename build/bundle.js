@@ -21489,6 +21489,7 @@
 	                }]
 	            },
 	            priceGraphVal: [[1, 1, 21.99, 38], [2, 2, 17.99, 45], [3, 4, 14.99, 50], [5, 5, 24.99, 30]],
+	            priceGraphMinValue: 14.99,
 	            bottomTable: [['04/28', 22.99, 5], ['04/29', 22.99, 10], ['04/30', 24.99, 15], ['05/12', 23.99, 10], ['05/13', 24.99, 7]],
 	            events: [{
 	                start: 1,
@@ -22257,8 +22258,7 @@
 	        key: 'render',
 	        value: function render() {
 	            var style = {
-	                width: this.props.widthVal + '%',
-	                paddingLeft: this.props.widthVal / 2 - 10 + '%'
+	                width: this.props.widthVal + '%'
 	            };
 	            return _react2.default.createElement(
 	                'div',

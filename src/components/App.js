@@ -35,6 +35,7 @@ export default class App extends Component{
                 [3,4, 14.99,50],
                 [5,5,24.99,30]
             ],
+            priceGraphMinValue: 14.99,
             bottomTable: [
                 ['04/28',22.99,5],
                 ['04/29',22.99,10],
