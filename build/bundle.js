@@ -21439,6 +21439,8 @@
 	    value: true
 	});
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _react = __webpack_require__(1);
@@ -21502,9 +21504,24 @@
 	    }
 	
 	    _createClass(App, [{
+	        key: 'onPriceChange',
+	        value: function onPriceChange(indexOfItem, val) {
+	            var changedVal = this.state.priceGraphVal.map(function (item, index) {
+	                if (indexOfItem === index) {
+	                    item[2] = parseFloat(val.price);
+	                    item[3] = parseFloat(val.discount);
+	                }
+	                return item;
+	            });
+	            this.setState({
+	                priceGraphVal: changedVal
+	            });
+	            console.log('parent price change');
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
-	            return _react2.default.createElement(_GraphWidget2.default, this.state);
+	            return _react2.default.createElement(_GraphWidget2.default, _extends({}, this.state, { onPriceChange: this.onPriceChange.bind(this) }));
 	        }
 	    }]);
 	
@@ -21751,6 +21768,7 @@
 	                        item: isPriceBarFound,
 	                        rightLineDetails: rightLineDetails,
 	                        leftLineDetails: leftLineDetails,
+	                        onPriceChange: _this2.props.onPriceChange.bind(null, priceBarIndex),
 	                        priceBarHeight: _this2.props.priceBarHeight
 	                    });
 	                }
@@ -21831,10 +21849,35 @@
 	    function PriceGraphBar(props) {
 	        _classCallCheck(this, PriceGraphBar);
 	
-	        return _possibleConstructorReturn(this, (PriceGraphBar.__proto__ || Object.getPrototypeOf(PriceGraphBar)).call(this, props));
+	        var _this = _possibleConstructorReturn(this, (PriceGraphBar.__proto__ || Object.getPrototypeOf(PriceGraphBar)).call(this, props));
+	
+	        _this.state = {
+	            onEdit: false
+	        };
+	        return _this;
 	    }
 	
 	    _createClass(PriceGraphBar, [{
+	        key: 'onEdit',
+	        value: function onEdit() {
+	            this.setState({
+	                onEdit: true
+	            });
+	        }
+	    }, {
+	        key: 'onSave',
+	        value: function onSave(e) {
+	            if (e.key === 'Enter') {
+	                this.setState({
+	                    onEdit: false
+	                });
+	                this.props.onPriceChange && this.props.onPriceChange({
+	                    price: this.refs.price.value,
+	                    discount: this.refs.discount.value
+	                });
+	            }
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var widthVal = this.props.currWidth + '%';
@@ -21844,40 +21887,71 @@
 	                rightLine = void 0;
 	            if (this.props.rightLineDetails) {
 	                var heightVal = 'calc(' + (this.props.rightLineDetails.nextItemTopPercentage - this.props.topPercentage) + '% - ' + this.props.priceBarHeight + 'px)';
-	                var style = {
-	                    height: heightVal,
-	                    top: this.props.topPercentage ? 'calc(' + this.props.topPercentage + '%' : 0,
-	                    left: '100%'
+	                var wrapperStyle = {
+	                    transform: 'translate(calc(100% - 1px),' + this.props.priceBarHeight + 'px)'
 	                };
-	                rightLine = _react2.default.createElement('div', { style: style, className: _pricegraphbar2.default.line });
+	                var style = {
+	                    height: heightVal
+	                };
+	                rightLine = _react2.default.createElement(
+	                    'div',
+	                    { style: wrapperStyle, className: _pricegraphbar2.default.lineWrapper },
+	                    _react2.default.createElement('div', { style: style, className: _pricegraphbar2.default.line })
+	                );
 	            }
 	
 	            if (this.props.leftLineDetails) {
-	                var _heightVal = 'calc(' + (this.props.leftLineDetails.prevItemTopPercentage - this.props.topPercentage) + '% - ' + this.props.priceBarHeight * 2 + 'px)';
+	                var _heightVal = 'calc(' + (this.props.leftLineDetails.prevItemTopPercentage - this.props.topPercentage) + '% - ' + this.props.priceBarHeight + 'px)';
 	                var _style = {
-	                    height: _heightVal,
-	                    top: this.props.topPercentage ? 'calc(' + this.props.topPercentage + '% + ' + this.props.priceBarHeight + 'px' : this.props.priceBarHeight + 'px',
-	                    left: '-1px'
+	                    height: _heightVal
+	                    //top: this.props.topPercentage? `calc(${this.props.topPercentage}% + ${this.props.priceBarHeight}px`: `${this.props.priceBarHeight}px`,
+	                    //left: '-1px'
 	                };
-	                leftLine = _react2.default.createElement('div', { style: _style, className: _pricegraphbar2.default.line });
+	                var _wrapperStyle = {
+	                    transform: 'translate(0, ' + this.props.priceBarHeight + 'px)'
+	                };
+	                leftLine = _react2.default.createElement(
+	                    'div',
+	                    { style: _wrapperStyle, className: _pricegraphbar2.default.lineWrapper },
+	                    _react2.default.createElement('div', { style: _style, className: _pricegraphbar2.default.line })
+	                );
 	            }
 	            var barStyle = {
 	                height: this.props.priceBarHeight,
-	                width: widthVal,
-	                top: topVal
+	                width: widthVal
 	            };
-	            return _react2.default.createElement(
-	                'div',
-	                { className: _pricegraphbar2.default.container },
-	                _react2.default.createElement(
+	            var containerTransformVal = this.props.topPercentage ? 'translate(0, ' + this.props.topPercentage + '%) translate(0, -' + this.props.priceBarHeight + 'px)' : 'translate(0,0)';
+	            var containerStyle = {
+	                transform: containerTransformVal
+	            };
+	            var content = void 0;
+	            if (this.state.onEdit) {
+	                content = _react2.default.createElement(
 	                    'div',
-	                    { style: barStyle, className: _pricegraphbar2.default.main },
+	                    null,
+	                    _react2.default.createElement('input', { ref: 'price', defaultValue: this.props.item[2] }),
+	                    _react2.default.createElement('br', null),
+	                    _react2.default.createElement('input', { ref: 'discount', defaultValue: this.props.item[3], onKeyPress: this.onSave.bind(this) })
+	                );
+	            } else {
+	                content = _react2.default.createElement(
+	                    'div',
+	                    null,
 	                    '$',
 	                    this.props.item[2],
 	                    _react2.default.createElement('br', null),
 	                    this.props.item[3],
 	                    '% off',
-	                    _react2.default.createElement('i', { className: _pricegraphbar2.default.icon })
+	                    _react2.default.createElement('i', { className: _pricegraphbar2.default.icon, onClick: this.onEdit.bind(this) })
+	                );
+	            }
+	            return _react2.default.createElement(
+	                'div',
+	                { style: containerStyle, className: _pricegraphbar2.default.container },
+	                _react2.default.createElement(
+	                    'div',
+	                    { style: barStyle, className: _pricegraphbar2.default.main },
+	                    content
 	                ),
 	                leftLine,
 	                rightLine
@@ -21895,7 +21969,7 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"main":"pricegraphbar__main___374El","line":"pricegraphbar__line___3kN_d","container":"pricegraphbar__container___3tLRg","icon":"pricegraphbar__icon___1AwEM font-awesome__fa___2otTb font-awesome__fa-pencil___3o0Fh undefined"};
+	module.exports = {"main":"pricegraphbar__main___374El","line":"pricegraphbar__line___3kN_d","lineWrapper":"pricegraphbar__lineWrapper___3pTwU","container":"pricegraphbar__container___3tLRg","icon":"pricegraphbar__icon___1AwEM font-awesome__fa___2otTb font-awesome__fa-pencil___3o0Fh undefined"};
 
 /***/ },
 /* 180 */

@@ -2405,18 +2405,26 @@
     position: absolute;
 }
 
+.pricegraphbar__lineWrapper___3pTwU{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
 .pricegraphbar__container___3tLRg{
     position: absolute;
     height: 100%;
     width: 100%;
-    top: 0;
-    left: 0;
+    transition: all 1s;
+    z-index: 1;
 }
+
+
 
 .pricegraphbar__icon___1AwEM{
     position: absolute;
     top: 10px;
-    left: 90%;
+    left: 90%;    
     cursor: pointer;
 }.pricegraphlabel__main___3aw1V{
     position: absolute;

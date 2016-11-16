@@ -101,6 +101,7 @@ export default class PriceGraph extends Component{
                                 item={isPriceBarFound}
                                 rightLineDetails={rightLineDetails}
                                 leftLineDetails={leftLineDetails}
+                                onPriceChange={this.props.onPriceChange.bind(null, priceBarIndex)}
                                 priceBarHeight={this.props.priceBarHeight}
                             />
            }

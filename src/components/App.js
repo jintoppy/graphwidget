@@ -56,9 +56,22 @@ export default class App extends Component{
             ]
         }
     }
+    onPriceChange(indexOfItem, val){
+        var changedVal = this.state.priceGraphVal.map((item, index)=> {
+            if(indexOfItem === index){
+                item[2] = parseFloat(val.price);
+                item[3] = parseFloat(val.discount);
+            }
+            return item;
+        });
+        this.setState({
+            priceGraphVal: changedVal
+        });
+        console.log('parent price change');
+    }
     render(){
         return (
-                <GraphWidget {...this.state} />
+                <GraphWidget {...this.state} onPriceChange={this.onPriceChange.bind(this)} />
         )
     }
 }

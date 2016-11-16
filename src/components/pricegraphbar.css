@@ -12,18 +12,26 @@
     position: absolute;
 }
 
+.lineWrapper{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
 .container{
     position: absolute;
     height: 100%;
     width: 100%;
-    top: 0;
-    left: 0;
+    transition: all 1s;
+    z-index: 1;
 }
+
+
 
 .icon{
     position: absolute;
     top: 10px;
-    left: 90%;
+    left: 90%;    
     cursor: pointer;
     composes: fa fa-pencil fa-1 from 'font-awesome/css/font-awesome.css';
 }
